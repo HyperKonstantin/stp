@@ -1,11 +1,11 @@
 package vlx.stp.backend.controllers;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +22,9 @@ public class AboutController {
     @Autowired
     public ObjectMapper objectMapper;
 
+    @Value("${app.about.path}")
+    String path;
+
     @GetMapping("/about")
     public ResponseEntity<?> about(){
         return new ResponseEntity<>(getAboutInfo(), HttpStatus.OK);
@@ -30,8 +33,8 @@ public class AboutController {
     @SneakyThrows
     private AboutResponse getAboutInfo(){
 
-        Map<String, String> map = objectMapper.readValue(new File("target/classes/git.json"),
-                new TypeReference<Map<String,String>>(){});
+        Map<String, String> map = objectMapper.readValue(new File(path),
+                new TypeReference<>(){});
 
         log.info(map.toString());
 
