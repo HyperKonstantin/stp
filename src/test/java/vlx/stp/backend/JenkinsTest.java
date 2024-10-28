@@ -14,6 +14,6 @@ public class JenkinsTest {
     @Test
     public void test(){
         TimeUnit.SECONDS.sleep(5L);
-        assertThat(2).isEqualTo(2);
+        assertThat(3).isEqualTo(2);
     }
 }
