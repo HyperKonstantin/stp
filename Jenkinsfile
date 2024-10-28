@@ -13,6 +13,11 @@ pipeline {
     }
 
     stages {
+        stage("test") {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
         stage("build image") {
             steps {
                 sh 'docker rm -f backend'
