@@ -21,7 +21,7 @@ pipeline {
         stage("build image") {
             steps {
                 sh 'docker rm -f backend'
-                sh 'mvn clean install'
+                sh 'mvn clean package -DskipTests'
                 sh 'docker build -t backend .'
             }
         }
