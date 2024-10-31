@@ -13,9 +13,4 @@ public class MainController {
         return new ResponseEntity<>("Hello, this is page!", HttpStatus.OK);
     }
 
-    @GetMapping("/egor")
-    public ResponseEntity<?> egorPage(){
-        return new ResponseEntity<>("Hello, egor!", HttpStatus.OK);
-    }
-
 }
