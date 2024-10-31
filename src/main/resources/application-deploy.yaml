@@ -8,6 +8,15 @@ spring:
     username: admin
     password: 12345678
 
+  flyway.enabled: true
+  flyway:
+    url: jdbc:postgresql://localhost:5432/test
+    locations: classpath:db/migration
+    schemas: public
+    user: admin
+    password: admin
+    baselineOnMigrate: true
+
 app:
   about:
     path: git.json
