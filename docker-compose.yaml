@@ -1,0 +1,9 @@
+services:
+  postgres16:
+    image: 'postgres:16'
+    environment:
+      - 'POSTGRES_DB=test'
+      - 'POSTGRES_USER=admin'
+      - 'POSTGRES_PASSWORD=admin'
+    ports:
+      - '5432:5432'
