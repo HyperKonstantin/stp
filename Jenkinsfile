@@ -39,5 +39,11 @@ pipeline {
                 sh 'docker run -p 8081:8080 --name backend-service -d backend'
             }
         }
+        stage("health check") {
+            steps {
+                sh 'sleep 30'
+                sh 'curl http://85.198.109.181:8081 || exit 1'
+            }
+        }
     }
 }
