@@ -4,6 +4,9 @@ properties([disableConcurrentBuilds()])
 pipeline {
     agent any
 
+    environment {
+        SPRING_PROFILES_ACTIVE = 'deploy'
+    }
     options {
         timestamps()
     }
