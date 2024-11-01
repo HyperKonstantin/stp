@@ -6,7 +6,7 @@ spring:
   datasource:
     jdbc-url: jdbc:postgresql://127.0.0.1:5432/stp_db
     username: admin
-    password: 12345678
+    password: '12345678'
 
 app:
   about:
