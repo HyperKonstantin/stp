@@ -4,17 +4,17 @@ springdoc:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/stp_db
-    username: 'admin'
-    password: '12345678'
+    url: jdbc:postgresql://127.0.0.1:5432/stp_db
+    username: admin
+    password: 12345678
 
   flyway.enabled: true
   flyway:
-    url: jdbc:postgresql://localhost:5432/test
+    url: jdbc:postgresql://127.0.0.1:5432/stp_db
     locations: classpath:db/migration
     schemas: public
     user: admin
-    password: admin
+    password: 12345678
     baselineOnMigrate: true
 
 app:
