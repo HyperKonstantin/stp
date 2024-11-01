@@ -4,7 +4,7 @@ springdoc:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/stp_db
+    url: jdbc:postgresql://85.198.109.181:5432/stp_db
     username: 'admin'
     password: '12345678'
 
