@@ -21,17 +21,17 @@ pipeline {
                 sh 'mvn clean test'
             }
         }
-        stage("build image") {
-            steps {
-                sh 'docker rm -f backend'
-                sh 'mvn clean package -DskipTests'
-                sh 'docker build -t backend .'
-            }
-        }
         stage("kill old container") {
             steps {
                 sh 'docker stop backend-service'
                 sh 'docker rm backend-service'
+            }
+        }
+        stage("build image") {
+            steps {
+                sh 'docker image rm backend'
+                sh 'mvn clean package -DskipTests'
+                sh 'docker build -t backend .'
             }
         }
         stage("deploy") {
