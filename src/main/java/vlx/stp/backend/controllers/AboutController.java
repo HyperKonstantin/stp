@@ -25,6 +25,11 @@ public class AboutController {
     @Value("${app.about.path}")
     String path;
 
+    @GetMapping("/")
+    public ResponseEntity<?> homePage(){
+        return new ResponseEntity<>("home page", HttpStatus.OK);
+    }
+
     @GetMapping("/about")
     public ResponseEntity<?> about(){
         return new ResponseEntity<>(getAboutInfo(), HttpStatus.OK);
