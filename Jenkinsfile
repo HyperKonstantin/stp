@@ -81,7 +81,7 @@ pipeline {
                         sh 'docker run -p 8081:8080 --name backend-service -d backend:previous'
                     }
                     else {
-                        sh 'docker run -p 8081:8080 --name backend-service -d backend:current'
+                        sh 'docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:current'
                     }
                 }
             }
