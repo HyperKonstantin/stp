@@ -6,7 +6,6 @@ pipeline {
 
     environment {
         SPRING_PROFILES_ACTIVE = 'deploy'
-        RUN_DEPLOY = true
     }
     options {
         timestamps()
@@ -24,26 +23,24 @@ pipeline {
     stages {
         stage("test") {
             when {
-                not {
-                    expression { params.REVERT || params.SKIP_TESTS }
-                }
+                expression { !params.SKIP_TESTS }
             }
             steps {
                 sh 'mvn clean test'
             }
         }
+
         stage("build image") {
             when {
-                not {
-                    expression { params.REVERT }
-                }
+                expression { !params.REVERT }
             }
             steps {
                 script {
-                    sh '''docker inspect backend:current && ( \
-                          docker image rm backend:previous ; \
+                    sh '''docker image inspect backend:current && ( \
+                          (docker image rm backend:previous || echo ">>> [previous image not found] <<<") ; \
                           docker tag backend:current backend:previous ; \
-                          docker image rm backend:current ) || echo ">>> [Building image after revert] <<<" '''
+                          docker image rm backend:current ) || \
+                            echo ">>> [current image not found, previous pipeline was with revert?] <<<" '''
 
                     sh 'mvn clean package -DskipTests'
                     sh 'docker build -t backend:current .'
@@ -57,41 +54,32 @@ pipeline {
             }
 
             steps {
-                script {
-                    env.RUN_DEPLOY = sh script:'docker image rm backend:current', returnStdout: true
-                }
-            }
-        }
-
-        stage("kill old container") {
-            when {
-                expression { env.RUN_DEPLOY }
-            }
-            steps {
                 sh 'docker stop backend-service'
                 sh 'docker rm backend-service'
+                sh '''docker inspect backend:current && \
+                      docker image rm backend:current || echo ">>> [current image not found, it's double revert?] <<<" '''
+                sh 'docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:previous'
             }
         }
 
         stage("deploy") {
             when {
-                expression { env.RUN_DEPLOY }
+                expression { !params.REVERT }
             }
             steps {
-                script {
-                    if (params.REVERT) {
-                        sh 'docker run -p 8081:8080 --name backend-service -d backend:previous'
-                    }
-                    else {
-                        sh 'docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:current'
-                    }
-                }
+                sh 'docker stop backend-service'
+                sh 'docker rm backend-service'
+                sh '''docker image inspect backend:current && \
+                      docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:current || ( \
+                      echo ">>> [current image not found, run previous version as current] <<<" ; \
+                      docker tag backend:previous backend:current ; \
+                      docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:current )'''
             }
         }
 
         stage("health check") {
             when {
-                expression { env.RUN_DEPLOY && !params.SKIP_HEALTHCHECK }
+                expression { !params.SKIP_HEALTHCHECK }
             }
             steps {
                 sh 'sleep 60'
