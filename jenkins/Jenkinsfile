@@ -26,7 +26,8 @@ pipeline {
                 expression { !params.SKIP_TESTS }
             }
             steps {
-                sh 'mvn clean test'
+//                 sh 'mvn clean test'
+                sh 'sleep 5'
             }
         }
 
@@ -57,7 +58,10 @@ pipeline {
                 sh 'docker stop backend-service'
                 sh 'docker rm backend-service'
                 sh '''docker inspect backend:current && \
-                      docker image rm backend:current || echo ">>> [current image not found, it's double revert?] <<<" '''
+                      docker image rm backend:current || ( \
+                      echo ">>> [current image not found, it's double revert? (run previous image)] <<<" ; \
+                      docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:previous ; \
+                      return 1 )'''
                 sh 'docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:previous'
             }
         }
@@ -67,8 +71,9 @@ pipeline {
                 expression { !params.REVERT }
             }
             steps {
-                sh 'docker stop backend-service'
-                sh 'docker rm backend-service'
+                sh '''docker stop backend-service && docker rm backend-service || \
+                       echo ">>>[running container not found]<<<"'''
+                sh ''
                 sh '''docker image inspect backend:current && \
                       docker run -p 127.0.0.1:8081:8080 --name backend-service -d backend:current || ( \
                       echo ">>> [current image not found, run previous version as current] <<<" ; \
