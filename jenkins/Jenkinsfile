@@ -13,6 +13,8 @@ pipeline {
     }
     parameters {
         booleanParam(defaultValue: false, name: 'REVERT', description: 'revert to the previous image')
+        booleanParam(defaultValue: false, name: 'SKIP_TESTS', description: 'skip tests stage')
+        booleanParam(defaultValue: false, name: 'SKIP_HEALTHCHECK', description: 'skip health check stage')
     }
     tools {
         maven 'Maven 3.8.6'
@@ -23,7 +25,7 @@ pipeline {
         stage("test") {
             when {
                 not {
-                    expression { params.REVERT }
+                    expression { params.REVERT || params.SKIP_TESTS }
                 }
             }
             steps {
@@ -89,7 +91,7 @@ pipeline {
 
         stage("health check") {
             when {
-                expression { env.RUN_DEPLOY }
+                expression { env.RUN_DEPLOY && !params.SKIP_HEALTHCHECK }
             }
             steps {
                 sh 'sleep 60'
