@@ -93,7 +93,7 @@ pipeline {
             }
             steps {
                 sh 'sleep 60'
-                sh 'curl http://85.198.109.181:8081/about || exit 1'
+                sh 'curl http://85.198.109.181 || exit 1'
             }
         }
     }
