@@ -26,8 +26,7 @@ pipeline {
                 expression { !params.SKIP_TESTS }
             }
             steps {
-//                 sh 'mvn clean test'
-                sh 'sleep 5'
+                sh 'mvn clean test'
             }
         }
 
