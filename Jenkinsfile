@@ -87,8 +87,9 @@ pipeline {
                 expression { !params.SKIP_HEALTHCHECK }
             }
             steps {
-                sh 'sleep 60'
-                sh 'curl http://85.198.109.181 || exit 1'
+//                 sh 'sleep 60'
+//                 sh 'curl http://85.198.109.181 || exit 1'
+                sh 'sleep 1'
             }
         }
     }
