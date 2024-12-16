@@ -4,8 +4,8 @@ springdoc:
 
 spring:
   datasource:
-    url: jdbc:postgresql://85.198.109.181:6432/stp_dev_db
-    username: 'dev_admin'
+    url: jdbc:postgresql://85.198.109.181:5432/stp_prod_db
+    username: 'prod_admin'
     password: '12345678'
 
 app:
